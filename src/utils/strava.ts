@@ -71,6 +71,7 @@ export const getAccessToken = async () => {
       throw new Error("Strava refresh token is missing");
     }
     const response = await stravaApi.oauth.refreshToken(refreshToken);
+    console.log("Strava access token refreshed:", response.access_token);
     return response.access_token;
   } catch (error) {
     console.error("Error refreshing Strava access token:", error);
@@ -84,9 +85,7 @@ export const getActivitiesSinceDate = async (startDate: Date) => {
     // Get a fresh access token
     // Use a more specific type or disable the eslint rule for this specific line
     // @ts-expect-error - stravaApi.client doesn't have proper TypeScript definitions
-    const strava = new stravaApi.client(
-      "96528126683393f58b514f05fd0a4b1b5df3b3cf"
-    );
+    const strava = new stravaApi.client(await getAccessToken());
     // Convert date to epoch time
     const after = Math.floor(startDate.getTime() / 1000);
 

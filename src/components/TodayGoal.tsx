@@ -172,18 +172,6 @@ const TodayGoal: React.FC<TodayGoalProps> = ({
               <span className="text-xs text-muted-foreground mt-1">
                 {todayMiles.toFixed(1)} / {dailyGoal} mi
               </span>
-              {todayMilesRemaining > 0 && (
-                <div className="flex items-center gap-0.5 text-[9px] text-blue-500 dark:text-blue-400 mt-0.5">
-                  <ActivityIcon
-                    type="Ride"
-                    size={8}
-                    className="flex-shrink-0"
-                  />
-                  <span>
-                    {(todayMilesRemaining * 3.33).toFixed(1)} cycling mi
-                  </span>
-                </div>
-              )}
             </div>
           </div>
         </div>
