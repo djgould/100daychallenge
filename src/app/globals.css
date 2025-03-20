@@ -1,26 +1,185 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --background: #f8f9fa;
+  --foreground: #171717;
+  
+  /* Base colors */
+  --primary: #0a84ff;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f3f5;
+  --secondary-foreground: #444444;
+  --muted: #f1f3f5;
+  --muted-foreground: #737373;
+  --accent: #f8fafc;
+  --accent-foreground: #171717;
+  
+  /* UI colors */
+  --success: #30d158;
+  --warning: #ffd60a;
+  --danger: #ff453a;
+  --info: #64d2ff;
+  
+  /* Card colors */
+  --card: #ffffff;
+  --card-foreground: #171717;
+  
+  /* Border colors */
+  --border: rgba(0, 0, 0, 0.1);
+  --ring: rgba(10, 132, 255, 0.5);
+  
+  /* Radius and shadows */
+  --radius: 0.75rem;
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.07), 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #0a101f;
     --foreground: #ededed;
+    
+    /* Base colors in dark mode */
+    --primary: #0a84ff;
+    --primary-foreground: #ffffff;
+    --secondary: #161f30;
+    --secondary-foreground: #e0e0e0;
+    --muted: #1a253a;
+    --muted-foreground: #a3a3a3;
+    --accent: #1e293b;
+    --accent-foreground: #ffffff;
+    
+    /* UI colors in dark mode */
+    --success: #30d158;
+    --warning: #ffd60a;
+    --danger: #ff453a;
+    --info: #64d2ff;
+    
+    /* Card colors in dark mode */
+    --card: #111827;
+    --card-foreground: #ededed;
+    
+    /* Border colors in dark mode */
+    --border: rgba(255, 255, 255, 0.1);
+    --ring: rgba(10, 132, 255, 0.5);
+    
+    /* Shadows in dark mode */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
   }
 }
 
 body {
-  background: var(--background);
+  background: linear-gradient(to bottom, var(--background), var(--secondary));
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100dvh;
+  font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  /* Typography scales */
+  h1, .h1 {
+    @apply text-3xl font-semibold tracking-tight lg:text-4xl;
+  }
+  
+  h2, .h2 {
+    @apply text-2xl font-semibold tracking-tight lg:text-3xl;
+  }
+  
+  h3, .h3 {
+    @apply text-xl font-semibold lg:text-2xl;
+  }
+  
+  h4, .h4 {
+    @apply text-lg font-medium lg:text-xl;
+  }
+  
+  p, .p {
+    @apply leading-7;
+  }
+  
+  .small {
+    @apply text-sm leading-normal;
+  }
+  
+  .tiny {
+    @apply text-xs leading-tight;
+  }
+  
+  /* Improved focus styles */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--secondary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--foreground);
 }

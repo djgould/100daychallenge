@@ -1,0 +1,39 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start Next.js Development Server",
+      "type": "shell",
+      "command": "./start-dev.sh",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Check Running Next.js Instances",
+      "type": "shell",
+      "command": "for port in 3000 3001 3002 3003 3004; do lsof -i:$port -sTCP:LISTEN; done",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Kill All Next.js Instances",
+      "type": "shell",
+      "command": "for port in 3000 3001 3002 3003 3004; do pid=$(lsof -i:$port -sTCP:LISTEN | tail -n 1 | awk '{print $2}'); if [ ! -z \"$pid\" ]; then echo \"Killing process $pid on port $port\"; kill $pid; fi; done",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    }
+  ]
+} 

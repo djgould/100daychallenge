@@ -1,0 +1,17 @@
+[
+  {
+    "key": "cmd+shift+d",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Start Next.js Development Server"
+  },
+  {
+    "key": "cmd+shift+k",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Kill All Next.js Instances"
+  },
+  {
+    "key": "cmd+shift+c",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Check Running Next.js Instances"
+  }
+] 

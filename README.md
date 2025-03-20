@@ -1,36 +1,124 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 100 Day Fitness Challenge Tracker
 
-## Getting Started
+A personal fitness challenge tracker that connects to Strava to track progress toward 1,000 miles before turning 30 on June 28th.
 
-First, run the development server:
+## Features
+
+- Connects to Strava API to fetch real activity data
+- Tracks progress toward a 1,000-mile goal
+- Displays statistics on pace, projection, and activity types
+- Shows recent activities from Strava
+- Public dashboard that anyone can view without logging in
+
+## Setup Instructions
+
+### 1. Clone the repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd 100-day-challenge
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Create a Strava API Application
 
-## Learn More
+1. Go to [Strava API Settings](https://www.strava.com/settings/api)
+2. Create a new application
+3. Note your Client ID and Client Secret
 
-To learn more about Next.js, take a look at the following resources:
+### 4. Get Strava Refresh Token
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+You'll need to get a refresh token that will allow the app to fetch your activities without requiring users to log in. Follow these steps:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Navigate to:
 
-## Deploy on Vercel
+```
+https://www.strava.com/oauth/authorize?client_id=YOUR_CLIENT_ID&redirect_uri=http://localhost&response_type=code&scope=activity:read_all
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Replace `YOUR_CLIENT_ID` with your Strava application client ID.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. Authorize the application
+3. You'll be redirected to a URL that contains an authorization code (e.g., `http://localhost?code=abc123...`)
+4. Use this code to request tokens:
+
+```bash
+curl -X POST https://www.strava.com/oauth/token \
+  -F client_id=YOUR_CLIENT_ID \
+  -F client_secret=YOUR_CLIENT_SECRET \
+  -F code=AUTHORIZATION_CODE \
+  -F grant_type=authorization_code
+```
+
+5. In the response, you'll receive a `refresh_token`. Save this for the next step.
+
+### 5. Configure Environment Variables
+
+Create a `.env.local` file in the root directory with your Strava credentials:
+
+```env
+# Strava API Credentials
+STRAVA_CLIENT_ID=your_client_id
+STRAVA_CLIENT_SECRET=your_client_secret
+STRAVA_REFRESH_TOKEN=your_refresh_token
+
+# Challenge Configuration
+CHALLENGE_START_DATE=2024-03-20
+CHALLENGE_END_DATE=2024-06-28
+CHALLENGE_GOAL_MILES=1000
+CHALLENGE_DAILY_GOAL=10
+```
+
+### 6. Run the development server
+
+Instead of directly using `npm run dev`, use our smart start script to avoid running multiple instances:
+
+```bash
+./start-dev.sh
+```
+
+Open [http://localhost:3000](http://localhost:3000) to see your challenge dashboard.
+
+### 7. Deploy to Production
+
+For production deployment, you can use services like Vercel or Netlify:
+
+```bash
+npm run build
+```
+
+## Development Tools
+
+This project includes custom tools to manage development server instances. For details, see [DEV-TOOLS.md](./DEV-TOOLS.md).
+
+Key features:
+
+- Smart start script that checks for running instances
+- VSCode tasks for server management
+- Keyboard shortcuts for common operations
+
+## Technologies Used
+
+- Next.js 15
+- React 19
+- TailwindCSS 4
+- SWR for data fetching
+- Strava API
+- Shadcn UI components
+
+## Refresh Token Management
+
+The Strava refresh token is valid for a long time but not forever. If you encounter authentication issues, you'll need to generate a new refresh token using the steps in the setup instructions.
+
+## Customization
+
+You can customize your challenge by modifying the following:
+
+- `.env.local` file for challenge dates and goal
+- Component styling in the respective component files
+- Data display and calculations in `src/app/page.tsx`
