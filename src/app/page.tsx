@@ -188,7 +188,20 @@ export default function Home() {
 
         <footer className="text-center text-muted-foreground text-sm mt-10 pb-8">
           <p>Data powered by Strava API • Updated hourly</p>
-          <p className="mt-1">Last updated: {lastUpdated}</p>
+          <p className="mt-1">
+            Last updated: {lastUpdated}
+            {data?._meta?.cachedResponse && (
+              <span className="ml-2 text-xs py-0.5 px-1.5 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full">
+                Cached
+              </span>
+            )}
+          </p>
+          {data?._meta?.nextRefreshAt && (
+            <p className="text-xs mt-1 text-muted-foreground/70">
+              Next update available at{" "}
+              {new Date(data._meta.nextRefreshAt).toLocaleTimeString()}
+            </p>
+          )}
         </footer>
       </main>
     </div>

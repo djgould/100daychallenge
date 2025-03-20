@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getChallengeStats } from "@/utils/strava";
+import { getCacheStats } from "@/utils/cache";
 
 export const dynamic = "force-dynamic"; // Disable caching for this route
 
@@ -40,8 +41,20 @@ export async function GET() {
       )
     );
 
+    // Get cache stats before fetching data
+    const cacheStatsBefore = await getCacheStats();
+
+    // Start time to measure data fetch duration
+    const fetchStart = Date.now();
+
     // Get Strava data
     const stravaStats = await getChallengeStats();
+
+    // Calculate fetch duration
+    const fetchDuration = Date.now() - fetchStart;
+
+    // Get cache stats after fetching data
+    const cacheStatsAfter = await getCacheStats();
 
     // Calculate progress and projections
     const progressPercentage = (stravaStats.totalMiles / goalMiles) * 100;
@@ -58,6 +71,12 @@ export async function GET() {
     const todayMiles = stravaStats.todayMiles || 0;
     const todayMilesRemaining = Math.max(0, dailyGoal - todayMiles);
     const todayPercentComplete = Math.min(100, (todayMiles / dailyGoal) * 100);
+
+    // Determine if data came from cache
+    // With Redis, we check for error or changes in cache stats
+    const wasCached =
+      !cacheStatsAfter.error &&
+      cacheStatsBefore.activeItems === cacheStatsAfter.activeItems;
 
     // Return complete stats
     return NextResponse.json({
@@ -82,6 +101,17 @@ export async function GET() {
       activityTypes: stravaStats.activityTypes,
       totalActivities: stravaStats.totalActivities,
       recentActivities: stravaStats.recentActivities,
+      _meta: {
+        cachedResponse: wasCached,
+        fetchDurationMs: fetchDuration,
+        cacheItems: cacheStatsAfter.activeItems,
+        timestamp: new Date().toISOString(),
+        nextRefreshAt: wasCached
+          ? null
+          : new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+        cacheType: "redis",
+        cacheProvider: "upstash",
+      },
     });
   } catch (error) {
     console.error("Error fetching challenge stats:", error);

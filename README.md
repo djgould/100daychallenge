@@ -7,6 +7,7 @@ A personal fitness challenge tracker that connects to Strava to track progress t
 ## Features
 
 - **Strava Integration**: Automatically fetches your activities from Strava
+- **Redis Caching**: Persistent caching with Upstash Redis reduces API calls
 - **Progress Tracking**: Visual representations of progress toward 1,000-mile goal
 - **Cycling Conversion**: Special conversion factor (3.33:1) for cycling activities
 - **Daily Goal Tracking**: Shows progress toward daily target with visual indicators
@@ -80,6 +81,10 @@ CHALLENGE_START_DATE=2024-03-20     # Your challenge start date
 CHALLENGE_END_DATE=2024-06-28       # Your challenge end date
 CHALLENGE_GOAL_MILES=1000           # Total mileage goal
 CHALLENGE_DAILY_GOAL=10             # Daily mileage target
+
+# Upstash Redis (Optional - for persistent caching)
+UPSTASH_REDIS_REST_URL=your_upstash_redis_url
+UPSTASH_REDIS_REST_TOKEN=your_upstash_redis_token
 ```
 
 You can customize the challenge dates and goals to match your personal targets.
@@ -127,6 +132,32 @@ The Strava refresh token is valid for a long time but not forever. If you encoun
 2. Generate a new refresh token with the curl command
 3. Update the `STRAVA_REFRESH_TOKEN` in your `.env.local` file
 
+## API Caching System
+
+The app includes a smart caching system to reduce the number of API calls to Strava:
+
+- **Redis Integration**: Uses Upstash Redis for persistent cross-instance caching
+- **Caching Duration**: Data from Strava is cached for 10 minutes
+- **Separate Cache Keys**: Different parts of the data have their own cache keys
+- **Visual Indicators**: The UI shows when data is coming from cache
+- **Token Management**: Access tokens are cached separately with longer TTL (45 minutes)
+
+This prevents excessive API calls while still keeping data reasonably fresh. The cache automatically invalidates after 10 minutes, ensuring you'll see new activities within that timeframe.
+
+### Setting Up Redis Caching
+
+1. Create a free account at [Upstash](https://upstash.com/)
+2. Create a new Redis database
+3. Copy your `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` from the Upstash dashboard
+4. Add these values to your `.env.local` file
+
+With Redis caching enabled, the app will:
+
+- Cache data persistently across server restarts
+- Share cached data across multiple instances (if deployed)
+- Reduce Strava API calls to once every 10 minutes
+- Show "Cached" indicator when serving cached data
+
 ## Technologies Used
 
 - Next.js 15
@@ -135,6 +166,7 @@ The Strava refresh token is valid for a long time but not forever. If you encoun
 - SWR for data fetching
 - Strava API
 - Shadcn UI components
+- Upstash Redis for persistent caching
 
 ## Customization
 

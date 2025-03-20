@@ -50,6 +50,13 @@ export interface ChallengeData {
     convertedDistance: number;
     isCycling: boolean;
   }>;
+  _meta?: {
+    cachedResponse: boolean;
+    fetchDurationMs: number;
+    cacheItems: number;
+    timestamp: string;
+    nextRefreshAt: string | null;
+  };
 }
 
 // Function to fetch data from the API
